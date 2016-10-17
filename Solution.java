@@ -8,10 +8,11 @@ class TrieNode {
     TrieNode[] arr;
     int leafCount;
     boolean childless;
-    
+
     public TrieNode() {
         arr = new TrieNode[26];
         leafCount = 0;
+        childless = true;
     }
 }
 
@@ -28,8 +29,8 @@ class Trie {
             int index = word.charAt(i) - 'a';
             if (p.arr[index] == null) {
                 p.arr[index] = new TrieNode();
-                if (!(p.childless)) {
-                    p.childless = true;
+                if (p.childless) {
+                    p.childless = false;
                 }
             }
             p = p.arr[index];
@@ -40,15 +41,15 @@ class Trie {
     public int countAllChildren(TrieNode node) {
         int childCount = 0;
         if (node != null) {
-            childCount += node.leafCount;
-            if (!(p.childless)) {
-                for (int i = 0; i < 26; i++) {
-                    if (node.arr[i] != null) {
-                        if (node.arr[i].childless) {
-                            childCount += node.arr[i].leafCount;
-                        }
-                        else {
-                            childCount += countAllChildren(node.arr[i]);
+            Stack<TrieNode> s = new Stack<TrieNode>();
+            s.push(node);
+            while (!(s.empty())) {
+                TrieNode poppedNode = s.pop();
+                childCount += poppedNode.leafCount;
+                if (!(poppedNode.childless)) {
+                    for (int i = 0; i < 26; i++) {
+                        if (poppedNode.arr[i] != null) {
+                            s.push(poppedNode.arr[i]);
                         }
                     }
                 }
