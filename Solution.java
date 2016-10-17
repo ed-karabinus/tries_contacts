@@ -7,6 +7,7 @@ import java.util.regex.*;
 class TrieNode {
     TrieNode[] arr;
     int leafCount;
+    boolean childless;
     
     public TrieNode() {
         arr = new TrieNode[26];
@@ -27,6 +28,9 @@ class Trie {
             int index = word.charAt(i) - 'a';
             if (p.arr[index] == null) {
                 p.arr[index] = new TrieNode();
+                if (!(p.childless)) {
+                    p.childless = true;
+                }
             }
             p = p.arr[index];
         }
@@ -37,9 +41,16 @@ class Trie {
         int childCount = 0;
         if (node != null) {
             childCount += node.leafCount;
-            for (int i = 0; i < 26; i++) {
-                if (node.arr[i] != null) {
-                    childCount += countAllChildren(node.arr[i]);
+            if (!(p.childless)) {
+                for (int i = 0; i < 26; i++) {
+                    if (node.arr[i] != null) {
+                        if (node.arr[i].childless) {
+                            childCount += node.arr[i].leafCount;
+                        }
+                        else {
+                            childCount += countAllChildren(node.arr[i]);
+                        }
+                    }
                 }
             }
         }
