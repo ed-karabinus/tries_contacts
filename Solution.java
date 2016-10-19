@@ -33,35 +33,15 @@ class Trie {
                     p.childless = false;
                 }
             }
+            p.leafCount += 1;
             p = p.arr[index];
         }
         p.leafCount += 1;
     }
     
-    public int countAllChildren(TrieNode node) {
-        int childCount = 0;
-        if (node != null) {
-            Stack<TrieNode> s = new Stack<TrieNode>();
-            s.push(node);
-            while (!(s.empty())) {
-                TrieNode poppedNode = s.pop();
-                childCount += poppedNode.leafCount;
-                if (!(poppedNode.childless)) {
-                    for (int i = 0; i < 26; i++) {
-                        if (poppedNode.arr[i] != null) {
-                            s.push(poppedNode.arr[i]);
-                        }
-                    }
-                }
-            }
-        }
-        return childCount;
-    }
-    
-    
     public int numberOfWordsThatStartWith(String prefix) {
         TrieNode p = searchNode(prefix);
-        return countAllChildren(p);
+        return p != null ? p.leafCount : 0;
     }
     
     public TrieNode searchNode(String s) {
@@ -86,11 +66,6 @@ public class Solution {
         Scanner in = new Scanner(System.in);
         int n = in.nextInt();
         Trie names = new Trie();
-        boolean timed = false;
-        if (args.length != 0) {
-            timed = args[0].compareTo("timed") == 0;
-        }
-        long startTime = System.currentTimeMillis();
         for(int a0 = 0; a0 < n; a0++){
             String op = in.next();
             String contact = in.next();
@@ -100,10 +75,6 @@ public class Solution {
             else if (op.compareTo("find") == 0) {
                 System.out.println(names.numberOfWordsThatStartWith(contact));
             }
-        }
-        long endTime = System.currentTimeMillis();
-        if (timed) {
-            System.out.println("Total execution time: " + (endTime - startTime) / 1000.0 + " seconds.");
         }
     }
 }
